@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="maincompile" name="autost">
+    <property environment="env"/>
+
+    <property name="build.dir" value="." />
+    <property name="tmp.dir" value="${build.dir}/tmp" />
+    <property name="src.dir" value="${build.dir}/src" />
+    <property name="tmp.classes.dir" value="${tmp.dir}/classes" />
+    <property name="release.dir" value="/Users/yunli/work/test/foss-autotest/release" />
+
+    <property name="afjarname" value="autoframework.jar" />
+    <property name="run.classpath" value=" ../classes/ 
+ ../lib/bsh-2.0b4.jar 
+ ../lib/bsh-2.0b4.jar 
+ ../lib/cucumber-core-1.2.5.jar 
+ ../lib/cucumber-groovy-1.2.5.jar 
+ ../lib/cucumber-html-0.2.3.jar 
+ ../lib/cucumber-java-1.2.5.jar 
+ ../lib/cucumber-jvm-deps-1.0.5.jar 
+ ../lib/cucumber-picocontainer-1.2.5.jar 
+ ../lib/cucumber-testng-1.2.5.jar 
+ ../lib/gherkin-2.12.2.jar 
+ ../lib/groovy-all-2.4.12.jar 
+ ../lib/jcommander-1.48.jar 
+ ../lib/picocontainer-2.15.jar 
+ ../lib/testng-6.9.10.jar 
+ ../libaf/commons-codec-1.10.jar 
+ ../libaf/commons-net-3.3_patch.jar 
+ ../libaf/commons-net-3.3.jar 
+ ../libaf/dbunit-2.5.1.jar 
+ ../libaf/ganymed-ssh2-261.jar 
+ ../libaf/guava-19.0.jar 
+ ../libaf/jsch-0.1.52.jar 
+ ../libaf/log4j-1.2.17.jar 
+ ../libaf/mockito-all-1.10.19.jar 
+ ../libaf/ojdbc5.jar 
+ ../libaf/poi-3.11.jar 
+ ../libaf/poi-ooxml-3.11.jar 
+ ../libaf/postgresql-9.4.1207.jre7.jar 
+ ../libaf/selenium-java-2.49.0.jar 
+ ../libaf/slf4j-api-1.7.13.jar 
+ ../libaf/slf4j-log4j12-1.7.13.jar 
+ ../libaf/autoframework.jar 
+ ../libaf/rest-assured-3.1.0.jar 
+ ../libaf/httpclient-4.5.1.jar 
+ ../libaf/httpcore-4.4.3.jar 
+ ../libaf/commons-logging-1.2.jar 
+ ../libaf/gson-2.3.1.jar 
+ ../libaf/commons-exec-1.3.jar 
+ ../libaf/jna-4.1.0.jar 
+ ../libaf/jna-platform-4.1.0.jar 
+ ../libaf/mysqlDriver.jar 
+ ../libaf/httpmime-4.5.1.jar 
+ ../libaf/commons-lang3-3.4.jar 
+ ../libaf/hamcrest-core-1.3.jar 
+ ../libaf/hamcrest-library-1.3.jar "/>
+
+    <target depends="clean" name="init">
+        <mkdir dir="bin"/>
+        <mkdir dir="output"/>
+        <mkdir dir="report"/>
+        <mkdir dir="evidence"/>
+        <mkdir dir="${tmp.dir}" />
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+        <delete dir="output"/>
+        <delete dir="report"/>
+        <delete dir="evidence"/>
+        <delete dir="tmp"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+
+    <target name="maincompile" depends="init">
+        <echo>AutoDesignMain source compile ...</echo>
+        <mkdir dir="${tmp.classes.dir}"/>
+        <javac encoding="UTF-8"
+            srcdir="${src.dir}"
+            destdir="${tmp.classes.dir}"
+            fork="no" executable="javac"
+            includeantruntime="false">
+            <classpath>
+                <fileset dir="./lib">
+                    <include name="*.jar" />
+                </fileset>
+                <fileset dir="./libaf">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="mainjar" depends="maincompile">
+        <echo>AutoDesignMain jar ...</echo>
+        <jar jarfile="./libaf/${afjarname}" >
+            <fileset dir="${tmp.classes.dir}" includes="**/*.*" />
+            <manifest>  
+                <attribute name="Main-Class" value="cucumber.api.cli.Main"/>  
+                <attribute name="Class-Path" value="${run.classpath}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="release" description="create ../autost_release.zip">
+        <delete dir="../autost_release.zip" quiet="true" />
+        <delete includeemptydirs="true">
+          <fileset dir="output" includes="**/*"/>
+        </delete>
+        <delete includeemptydirs="true">
+          <fileset dir="report" includes="**/*"/>
+        </delete>
+        <delete includeemptydirs="true">
+          <fileset dir="evidence" includes="**/*"/>
+        </delete>
+        <zip destfile="${release.dir}/autost_release.zip" basedir=".." whenempty="create" 
+            includes="autost, autost/steps, autost/features, autost/lib, autost/lib/**, autost/libaf, autost/libaf/**, autost/output, autost/evidence, autost/report, autost/classes, autost/*.sh, autost/*.properties"
+            excludes="autost/.classpath, autost/.gitignore, autost/.project, autost/build.xml, autost/.settings, autost/.settings/**, autost/bin, autost/bin/**, autost/src, autost/src/**, autost/tmp, autost/tmp/**" />
+    </target>
+</project>
